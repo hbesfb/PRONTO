@@ -47,7 +47,7 @@ To run this script tool in your system with python3, it will read the clinical d
 
 # Example commands
 python3 Script/InPreD_PRONTO.py
-(Please remember to update the "Create_report" to "N" in file In/InPreD_PRONTO_metadata.txt manually after the report generation is finished!)
+Please remember to update the "Create_report" to "N" in file In/InPreD_PRONTO_metadata.txt manually after the report generation is finished!
 
 Special commands used by OUS:
 python3 Script/InPreD_PRONTO.py -r <TSO500_runID> -D <DNA_sampleID> -c
@@ -62,5 +62,6 @@ This script is used to run a container once with command "python Script/InPreD_P
 
 # PRONTO Singularity
 Download PRONTO singularity image or build it based on the PRONTO docker image in your local system. Store the image file under PRONTO_image/PRONTO_singularity/.
+
 PRONTO_image/PRONTO_singularity_run.sh
 This script is used to execute with command "python Script/InPreD_PRONTO.py" based on the PRONTO Singularity image. This script will ask you to put into your local "TSOPPI results" path, and the reports will be exported to "Out/$runID/IPDXXX" under your "PRONTO_report" folder.
