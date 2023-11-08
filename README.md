@@ -1,5 +1,5 @@
 # PRONTO
-rePort geneRator fOr iNpred Tumor bOards 
+rePort geneRator fOr iNpred Tumor bOards                                                   
 This repository contains the configure, scripts, report template, file infrastructure and docker files to run this tool locally or in Docker/Singularity.
 
 # Requirments
