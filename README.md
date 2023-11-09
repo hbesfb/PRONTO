@@ -1,9 +1,10 @@
 # PRONTO
-rePort geneRator fOr iNpred Tumor bOards                                                   
+rePort geneRator fOr iNpred Tumor bOards    
+This script is a tool used to filter and analysis data from TSO500 results. And generate the report based on the results data and template file.        
 This repository contains the configure, scripts, report template, file infrastructure and docker files to run this tool locally or in Docker/Singularity.
 
 # Requirments
-1. This script needs to be run with python above version 3.
+1. This tool needs to be run with python above version 3.
 2. Module xlutils and pptx need to be insalled for python:                                                                                                       
 To install module xlutils, run the command: [sudo pip install xlutils]                                                                      
 To install module python-pptx, run the command: [sudp pip3 install python-pptx]                         
