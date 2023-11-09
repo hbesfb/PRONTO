@@ -1,6 +1,6 @@
 # PRONTO
 rePort geneRator fOr iNpred Tumor bOards    
-This script is a tool used to filter and analysis data from TSO500 results. And generate the report based on the results data and template file.        
+This is a tool used to filter and analysis data from TSO500 results. And generate the report based on the results data and template file.        
 This repository contains the configure, scripts, report template, file infrastructure and docker files to run this tool locally or in Docker/Singularity.
 
 # Requirments
