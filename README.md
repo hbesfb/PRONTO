@@ -17,7 +17,7 @@ INPUT:
 Script/PRONTO.py                                    ---  The python script.                                                  
 Config/configure_PRONTO.ini                         ---  The configure file. Local changes is needed to set up.                                        
 In/Templates/MTB_template.pptx                      ---  The template file used for generating PP report.                                                      
-In/InPreD_PRONTO_metadata.txt                       ---  The clinical data file. Reports will be generated for the Sample_id with Create_report==Y in this file. 
+In/InPreD_PRONTO_metadata.txt                       ---  The clinical data file. Reports will be generated for the Sample_id with "Create_report==Y" in this file. 
 In/MTF/IPD-XXXX_Material Transit Form InPreD NGS.xlsx	---  The material file contains all patient personal information. (only OUS)                              
 
 OUTPUT:                  
@@ -30,8 +30,8 @@ Out/InPreD_PRONTO_metadata_tsoppi.txt			          --- The file contains clinical
 IMAGES:                  
 PRONTO_image/PRONTO_docker/Dockerfile                           --- The file used to build up the docker image.                
 PRONTO_image/PRONTO_docker/PRONTO_v1_docker_image.tar           --- The Docker image file of PRONTO.                      
-PRONTO_image/PRONTO_docker_build.sh                             --- The script can build a PRONTO docker image "pronto:v1".              
-PRONTO_image/PRONTO_docker_run.sh                               --- The script runs a container based on the docker image "pronto:v1".             
+PRONTO_image/PRONTO_docker_build.sh                             --- The script can build a PRONTO docker image "docker_pronto:v1".              
+PRONTO_image/PRONTO_docker_run.sh                               --- The script runs a container based on the docker image "docker_pronto:v1".             
 PRONTO_image/PRONTO_singularity/PRONTO_v1_singularity_image.sif --- The Singularity image file of PRONTO.                         
 PRONTO_image/PRONTO_singularity_run.sh                          --- The script executes PRONTO command based on the PRONTO Singularity image.  
 
@@ -45,13 +45,17 @@ Testing_data/191206_NB501498_0174_AHWCNMBGXC.zip                                
 In Config/configure_PRONTO.ini, please specify your InPreD node with "inpred_node = ". This will apprear in the header of the reports.               
 In Config/configure_PRONTO.ini, please specify the local dataset file path of TSOPPI results with "data_path =".                         
 2. Type clinical data into In/InPreD_PRONTO_metadata.txt                       
-Manually write the clinical data into file In/InPreD_PRONTO_metadata.txt. Reports will be generated for the Sample_id with Create_report==Y in this file.     
-3. Run Script/PRONTO.py                               
+Manually write the clinical data into file In/InPreD_PRONTO_metadata.txt. Reports will be generated for the Sample_id with "Create_report==Y" in this file.     
+3. Run Script/PRONTO.py                                                          
+Please run the script with "-h" or "--help" to print the usage information.                                                                                                       
 This script is a tool used to generate the paitent report based on the TSO500 analysis results and the personal intomation from the clinical data in In/InPreD_PRONTO_metadata.txt, and update the SOPPI results into the file Out/InPreD_PRONTO_metadata_tsoppi.txt when the reports are generated.          
 This script could also fill the patient personal information into the clinical data file with the MTF files under the foder In/MTF/. (This fuction currently is only used by OUS)                                                                
-To run this script tool in your system with python3, it will read the clinical data from In/InPreD_PRONTO_metadata.txt and generate reports for the Sample_id with "Create_report==Y".                            
+To run this script tool in your system with python3, it will read the clinical data from In/InPreD_PRONTO_metadata.txt and generate reports for the Sample_id with "Create_report==Y".                             
 
 # Example commands
+[python3 Script/InPreD_PRONTO.py -h]
+Print the usage information of this tool.             
+
 [python3 Script/InPreD_PRONTO.py]                                           
 Please remember to update the "Create_report" to "N" in file In/InPreD_PRONTO_metadata.txt manually after the report generation is finished!             
 
