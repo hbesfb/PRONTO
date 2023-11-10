@@ -33,7 +33,12 @@ PRONTO_image/PRONTO_docker/PRONTO_v1_docker_image.tar           --- The Docker i
 PRONTO_image/PRONTO_docker_build.sh                             --- The script can build a PRONTO docker image "pronto:v1".              
 PRONTO_image/PRONTO_docker_run.sh                               --- The script runs a container based on the docker image "pronto:v1".             
 PRONTO_image/PRONTO_singularity/PRONTO_v1_singularity_image.sif --- The Singularity image file of PRONTO.                         
-PRONTO_image/PRONTO_singularity_run.sh                          --- The script executes PRONTO command based on the PRONTO Singularity image.      
+PRONTO_image/PRONTO_singularity_run.sh                          --- The script executes PRONTO command based on the PRONTO Singularity image.  
+
+TESTING:                                                            
+Testing_data/191206_NB501498_0174_AHWCNMBGXC_TSO_500_LocalApp_postprocessing_results  --- The testing data from AcroMetrix sample TSOPPI results. Move this filder into your local TSOPPI result path for testing.                                                      
+Testing_data/InPreD_PRONTO_metadata.txt                                               --- The file contains clinical data of AcroMetrix samples for testing. Move this file into In/ for testing.                                                      
+Testing_data/191206_NB501498_0174_AHWCNMBGXC                                          --- The testing results from AcroMetrix sample TSOPPI results for your local comparisons.                                                                   
 
 # Process of local running
 1. LOCAL CONFIGURE:                       
