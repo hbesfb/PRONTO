@@ -59,6 +59,7 @@ def read_exl(data_file,filter_column,key_word):
 	mark = False
 	nrow_mark = 0
 	col0 = "Sample_ID"
+	global DNA_sampleID
 	for line in open(data_file):
 		line_cells = line.split('\t')
 		if(line.split('\t')[0] == col0 and not mark):
@@ -74,7 +75,7 @@ def read_exl(data_file,filter_column,key_word):
 			line_cells_string.append('\n')
 			data.append(line_cells_string)
 			mark = True
-		if(line.startswith("IPD") and mark):
+		if(line.startswith(DNA_sampleID) and mark):
 			if(line_cells[IGV_QC_col] == "Not OK" and line_cells[Class_judgement_col] != "exclude"):
 				print ("""              Dataset error: 
 			IGV_QC is 'Not OK', but Class_judement is not 'exclude'. Please check the QC Excel file and fix the mistake before run this script again!
@@ -108,6 +109,7 @@ def read_exl_col(data_file,filter_column,key_word,columns,MTB_format):
 	mark = False
 	nrow_mark = 0
 	col0 = "Sample_ID"
+	global DNA_sampleID
 	nlines = len(open(data_file).readlines())
 	data = [[] for n in range(nlines)]
 	column_mark = []
@@ -139,7 +141,7 @@ def read_exl_col(data_file,filter_column,key_word,columns,MTB_format):
 				data[0].insert(1,"MTB_formart\t")
 			data[0].append('\n')
 			mark = True
-		if(line.startswith("IPD") and mark):
+		if(line.startswith(DNA_sampleID) and mark):
 			if(line_cells[IGV_QC_col] == "Not OK" and line_cells[Class_judgement_col] != "exclude"):
 				print ("""              Dataset error: 
 			IGV_QC is 'Not OK', but Class_judement is not 'exclude'. Please check the QC Excel file and fix the mistake before run this script again!
