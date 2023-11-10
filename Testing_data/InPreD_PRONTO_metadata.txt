@@ -22,6 +22,3 @@
 Sample_id	Sequencing_run_id	Create_report	Year_of_birth	Year_of_diagnosis	Clinical_diagnosis	Sex	Study_id	Sample_material_id	Year_of_sample_collection	Requisition_hospital	Extraction_hospital	Tumor_content_pathology	Batch
 CL-AcroMetrix	191206_NB501498_0174_AHWCNMBGXC	Y	1985	-	-	F	IMPR.T-0999	MP23-19991	-	TEST	Mol. Pat. OUS	60	999
 CL-NA12878N25	191206_NB501498_0174_AHWCNMBGXC	Y	1967	-	-	F	IMPR.T-0999	MP23-19992	-	TEST	Mol. Pat. OUS	65	999
-NCGC-Sarc-19188T	191206_NB501498_0174_AHWCNMBGXC	Y	1976	-	-	M	IMPR.A-0999	MP23-19993	-	TEST	Mol. Pat. OUS	70	999
-NCGC-Sarc-20192T	191206_NB501498_0174_AHWCNMBGXC	Y	1952	-	-	M	IMPR.A-0999	MP23-19994	-	TEST	Mol. Pat. OUS	75	999
-NCGC-Sarc-20256T	191206_NB501498_0174_AHWCNMBGXC	Y	1999	-	-	F	IMPR.T-0999	MP23-19995	-	TEST	Mol. Pat. OUS	80	999
