@@ -362,7 +362,10 @@ def update_ppt_template_data(inpred_node,ipd_no,ipd_gender,ipd_age,ipd_diagnosis
 		age = str(int(float(ipd_age)))
 	else:
 		age = ipd_age
-	sample = sample_type + '\n' + sample_material
+	try:
+		sample = sample_type + '\n' + sample_material
+	except:
+		sample = ""
 	today_date = time.strftime("%d", time.localtime())
 	today_month = time.strftime("%b", time.localtime())
 	today_year = time.strftime("%Y", time.localtime())
@@ -844,7 +847,10 @@ def update_clinical_tsoppi_file(InPreD_clinical_tsoppi_data_file,sample_id,if_ge
 	RNA_DNA_tumor_normal = ""
 	global ipd_diagnosis_year
 	global runID
-	sample_type = sample_type.replace("\n", "")
+	try:
+		sample_type = sample_type.replace("\n", "")
+	except:
+		sample_type = ""
 	if(pipline != "-" and pipline != ""):
 		pipline = pipline.split(": ")[1]
 	new_content = ""
@@ -1004,8 +1010,7 @@ def main(argv):
 				tumor_content_nr = ln.split('\t')[12]
 				batch_nr = ln.split('\t')[13]
 				if not(re.fullmatch(DNA_sampleID_format, DNA_sampleID)):
-					print("Error! " + DNA_sampleID + " does not fit for the sample id format. Report is not generated for this sample!")
-					continue
+					print("Warning: " + DNA_sampleID + " does not fit for the sample id format!")
 				try:
 					ipd_age = str(int(time.strftime("%Y", time.localtime())) - int(ipd_birth_year))
 				except:
@@ -1026,7 +1031,8 @@ def main(argv):
 					sys.exit(0)
 				if not os.path.exists(output_path):
 					os.makedirs(output_path)
-				os.makedirs(extra_path)
+				if not os.path.exists(extra_path):
+					os.makedirs(extra_path)
 				
 				for line in open(sample_list_file):
 					if not(line.startswith("#")):
@@ -1120,25 +1126,23 @@ def main(argv):
 
 				file = os.path.split(data_file_small_variant_table)[1]
 				ipd_no_str = file.split('_')[0]
-				sample_type_string = file.split('-')[2]
-				sample_type_short = sample_type_string[0:1]
-				sample_type_list = {'M': 'Metastasis', 'T': 'Tumor', 'C': 'Cell-line', 'N': 'Normal/Control', 'P': 'Primary tumor\n naive', 'p': 'Primary tumor\n post-treatment', 'R': 'Regional met\n naive', 'r': 'Regional met\n post-treatment', 'D': 'Distal met\n naive', 'd': 'Distal met\n post-treatment', 'L': 'Liquid', 'X': 'Unknown'}
 				try:
+					sample_type_string = file.split('-')[2]
+					sample_type_short = sample_type_string[0:1]
+					sample_type_list = {'M': 'Metastasis', 'T': 'Tumor', 'C': 'Cell-line', 'N': 'Normal/Control', 'P': 'Primary tumor\n naive', 'p': 'Primary tumor\n post-treatment', 'R': 'Regional met\n naive', 'r': 'Regional met\n post-treatment', 'D': 'Distal met\n naive', 'd': 'Distal met\n post-treatment', 'L': 'Liquid', 'X': 'Unknown'}
 					sample_type = sample_type_list.get(sample_type_short)
 				except:
 					sample_type = ''
-
-				sample_material_string = file.split('-')[3]
-				sample_material_short = sample_material_string[0:1]
-				sample_material_list = {'F': 'Fresh Frozen', 'A': 'Archived FFPE', 'B': 'Blood', 'C': 'Cytology', 'M': 'Fresh bone marrow', 'S': 'Buccal swab (normal)', 'X': 'Unspecified'}
 				try:
+					sample_material_string = file.split('-')[3]
+					sample_material_short = sample_material_string[0:1]
+					sample_material_list = {'F': 'Fresh Frozen', 'A': 'Archived FFPE', 'B': 'Blood', 'C': 'Cytology', 'M': 'Fresh bone marrow', 'S': 'Buccal swab (normal)', 'X': 'Unspecified'}
 					sample_material = sample_material_list.get(sample_material_short)
 				except:
 					sample_material = ''
-
-				tumor_type_no = sample_material_string[1:3]
-				tumor_type_list = {'00': 'Cancer origo incerta', '01': 'Adrenal Gland', '02': 'Ampulla of Vater', '03': 'Biliary Tract', '04': 'Bladder/Urinary Tract', '05': 'Bone', '06': 'Breast', '07': 'Cervix', '08': 'CNS/Brain', '09': 'Colon/Rectum', '10': 'Esophagus/Stomach', '11': 'Eye', '12': 'Head and Neck', '13': 'Kidney', '14': 'Liver', '15': 'Lung', '16': 'Lymphoid', '17': 'Myeloid', '18': 'Ovary/Fallopian Tube', '19': 'Pancreas', '20': 'Peripheral Nervous System', '21': 'Peritoneum', '22': 'Pleura', '23': 'Prostate', '24': 'Skin', '25': 'Soft Tissue', '26': 'Testis', '27': 'Thymus', '28': 'Thyroid', '29': 'Uterus', '30': 'Vulva/Vagina', 'XX': 'Not available'}
 				try:
+					tumor_type_no = sample_material_string[1:3]
+					tumor_type_list = {'00': 'Cancer origo incerta', '01': 'Adrenal Gland', '02': 'Ampulla of Vater', '03': 'Biliary Tract', '04': 'Bladder/Urinary Tract', '05': 'Bone', '06': 'Breast', '07': 'Cervix', '08': 'CNS/Brain', '09': 'Colon/Rectum', '10': 'Esophagus/Stomach', '11': 'Eye', '12': 'Head and Neck', '13': 'Kidney', '14': 'Liver', '15': 'Lung', '16': 'Lymphoid', '17': 'Myeloid', '18': 'Ovary/Fallopian Tube', '19': 'Pancreas', '20': 'Peripheral Nervous System', '21': 'Peritoneum', '22': 'Pleura', '23': 'Prostate', '24': 'Skin', '25': 'Soft Tissue', '26': 'Testis', '27': 'Thymus', '28': 'Thyroid', '29': 'Uterus', '30': 'Vulva/Vagina', 'XX': 'Not available'}
 					tumor_type = tumor_type_list.get(tumor_type_no)
 				except:
 					tumor_type = ""
@@ -1280,6 +1284,9 @@ def main(argv):
 				for txt_file in txt_files:
 					if(txt_file.endswith('.txt')):
 						txt_file_path = os.path.join(output_path,txt_file)
+						txt_file_extra_path = os.path.join(extra_path,txt_file)
+						if os.path.exists(txt_file_extra_path):
+							os.remove(txt_file_extra_path)
 						shutil.move(txt_file_path, extra_path)
 
 				# Move small variant data file and plots into the report folder.
