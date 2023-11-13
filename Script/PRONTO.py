@@ -950,8 +950,8 @@ def main(argv):
 		elif opt in ("-c", "--clinicalFile"):
 			update_clinical_file = True
 	runID_DNA = runID
-	DNA_sampleID_format = "IPD\d\d\d\d-D\d\d-\w\d\d-\w\d\d"
-	
+	DNA_sampleID_format = "IPD(\d|X)(\d|X)(\d|X)(\d|X)-D(\d|X)(\d|X)-\w(\d|X)(\d|X)-\w(\d|X)(\d|X)"
+
 	base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 	config_file = base_dir + "/Config/configure_PRONTO.ini"
 	InPreD_clinical_data_file = base_dir + "/In/InPreD_PRONTO_metadata.txt"
@@ -970,8 +970,7 @@ def main(argv):
 		sys.exit(0)
 	if(update_clinical_file == True):
 		if not(re.fullmatch(DNA_sampleID_format, DNA_sampleID)):
-			print("Error! " + DNA_sampleID + " does not fit for the sample id format!")
-			sys.exit(0)
+			print("Warning: " + DNA_sampleID + " does not fit for the sample id format!")
 		ipd_material_file = base_dir + "/In/MTF/" + ipd_no[:3] + '-' + ipd_no[3:] + "_Material Transit Form InPreD NGS.xlsx"
 		if not os.path.exists(ipd_material_file):
 			print ("""Error: IPD Material Transit Form InPreD NGS file does not exit under the MTF dir. PRONTO meta file could not be updated with patient personal information by parameter -c of this script!""")
