@@ -652,7 +652,7 @@ def update_ppt_variant_summary_table(data_nrows,DNA_sampleID,RNA_sampleID,TMB_DR
 		textbox2 = slide.shapes.add_textbox(Cm(15.84), Cm(4.18), Cm(2.26), Cm(0.64))
 		tf2 = textbox2.text_frame
 		tf2.paragraphs[0].text = stable_text_long
-		tf2.paragraphs[0].font.size = Pt(6)
+		tf2.paragraphs[0].font.size = Pt(7)
 		tf2.paragraphs[0].alignment = PP_ALIGN.CENTER
 		textbox3 = slide.shapes.add_textbox(Inches(3.66), Inches(1.27), Inches(0.30), Inches(0.22))
 		tf3 = textbox3.text_frame
@@ -701,12 +701,12 @@ def update_ppt_variant_summary_table(data_nrows,DNA_sampleID,RNA_sampleID,TMB_DR
 		textbox6 = slide.shapes.add_textbox(Inches(6.23), Inches(1.06), Inches(0.97), Inches(0.19))
 		tf6 = textbox6.text_frame
 		tf6.paragraphs[0].text = splicing
-		tf6.paragraphs[0].font.size = Pt(6) 
+		tf6.paragraphs[0].font.size = Pt(7) 
 		tf6.paragraphs[0].alignment = PP_ALIGN.LEFT
 		textbox7 = slide.shapes.add_textbox(Inches(6.23), Inches(1.26), Inches(0.97), Inches(0.19))
 		tf7 = textbox7.text_frame	
 		tf7.paragraphs[0].text = fusion
-		tf7.paragraphs[0].font.size = Pt(6)
+		tf7.paragraphs[0].font.size = Pt(7)
 		tf7.paragraphs[0].alignment = PP_ALIGN.LEFT
 		if(index == 1):
 			textbox8 = slide.shapes.add_textbox(Inches(5.14), Inches(2.63), Inches(0.53), Inches(0.25))
@@ -950,7 +950,7 @@ def main(argv):
 		elif opt in ("-c", "--clinicalFile"):
 			update_clinical_file = True
 	runID_DNA = runID
-	DNA_sampleID_format = "IPD(\d|X)(\d|X)(\d|X)(\d|X)-D(\d|X)(\d|X)-\w(\d|X)(\d|X)-\w(\d|X)(\d|X)"
+	DNA_sampleID_format = "IPD\d\d\d\d-D(\d|X)(\d|X)-\w(\d|X)(\d|X)-\w(\d|X)(\d|X)"
 
 	base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 	config_file = base_dir + "/Config/configure_PRONTO.ini"
