@@ -17,8 +17,6 @@ jobs:
       - 
         name: Lint Dockerfile
         uses: hadolint/hadolint-action@v3.1.0
-        with:
-          file: ./PRONTO_image/PRONTO_docker/Dockerfile
       - 
         name: Docker Meta
         id: meta
