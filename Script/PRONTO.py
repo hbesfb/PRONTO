@@ -1302,8 +1302,8 @@ def main(argv):
 				ipd_material_file = base_dir + "/In/MTF/" + ipd_no[:3] + '-' + ipd_no[3:] + "_Material Transit Form InPreD NGS.xlsx"
 				if os.path.exists(ipd_material_file):
 					move_ipd_material_file = shutil.move(ipd_material_file, extra_path)
-				DNA_if_generate_report = "-"
 				if os.path.exists(InPreD_clinical_tsoppi_data_file):
+					DNA_if_generate_report = "-"
 					update_clinical_tsoppi_file(InPreD_clinical_tsoppi_data_file,DNA_sampleID,DNA_if_generate_report,ipd_birth_year,ipd_clinical_diagnosis,ipd_gender,ipd_consent,DNA_ori_name,ipd_collection_year,requisition_hospital,extraction_hospital,tumor_content_nr,batch_nr,str(sample_material),sample_type,str(tumor_type),str_TMB_DRUP,TMB_TSO500,MSI_TSO500,pipline)
 					if(RNA_sampleID != ""):
 						RNA_if_generate_report = "-"
