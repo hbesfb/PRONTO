@@ -356,7 +356,7 @@ def get_RNA_ori_name(InPreD_clinical_data_file,RNA_sampleID):
 
 
 def update_ppt_template_data(inpred_node,ipd_no,ipd_gender,ipd_age,ipd_diagnosis_year,DNA_ori_name,RNA_ori_name,ipd_consent,requisition_hospital,ipd_clinical_diagnosis,tumor_type,sample_type,sample_material,pipline,tumor_content,ppt_template,output_ppt_file):
-	if(ipd_gender != ""):
+	if(ipd_gender != "" and ipd_gender != "X"):
 		gender = ipd_gender[0]
 	else:
 		gender = ""
@@ -413,7 +413,7 @@ def update_ppt_template_data(inpred_node,ipd_no,ipd_gender,ipd_age,ipd_diagnosis
 		textbox7 = slide.shapes.add_textbox(Inches(5.77), Inches(0.19), Inches(0.86), Inches(0.33))
 		tf7 = textbox7.text_frame
 		if(index == 1 or ipd_clinical_diagnosis == "-" or ipd_clinical_diagnosis == ""):
-			tf7.paragraphs[0].text = tumor_type
+			tf7.paragraphs[0].text = str(tumor_type)
 		else:
 			tf7.paragraphs[0].text = ipd_clinical_diagnosis
 		tf7.paragraphs[0].font.size = Pt(14)
@@ -1133,14 +1133,14 @@ def main(argv):
 					sample_type_list = {'M': 'Metastasis', 'T': 'Tumor', 'C': 'Cell-line', 'N': 'Normal/Control', 'P': 'Primary tumor\n naive', 'p': 'Primary tumor\n post-treatment', 'R': 'Regional met\n naive', 'r': 'Regional met\n post-treatment', 'D': 'Distal met\n naive', 'd': 'Distal met\n post-treatment', 'L': 'Liquid', 'X': 'Unknown'}
 					sample_type = sample_type_list.get(sample_type_short)
 				except:
-					sample_type = ''
+					sample_type = ""
 				try:
 					sample_material_string = file.split('-')[3]
 					sample_material_short = sample_material_string[0:1]
 					sample_material_list = {'F': 'Fresh Frozen', 'A': 'Archived FFPE', 'B': 'Blood', 'C': 'Cytology', 'M': 'Fresh bone marrow', 'S': 'Buccal swab (normal)', 'X': 'Unspecified'}
 					sample_material = sample_material_list.get(sample_material_short)
 				except:
-					sample_material = ''
+					sample_material = ""
 				try:
 					tumor_type_no = sample_material_string[1:3]
 					tumor_type_list = {'00': 'Cancer origo incerta', '01': 'Adrenal Gland', '02': 'Ampulla of Vater', '03': 'Biliary Tract', '04': 'Bladder/Urinary Tract', '05': 'Bone', '06': 'Breast', '07': 'Cervix', '08': 'CNS/Brain', '09': 'Colon/Rectum', '10': 'Esophagus/Stomach', '11': 'Eye', '12': 'Head and Neck', '13': 'Kidney', '14': 'Liver', '15': 'Lung', '16': 'Lymphoid', '17': 'Myeloid', '18': 'Ovary/Fallopian Tube', '19': 'Pancreas', '20': 'Peripheral Nervous System', '21': 'Peritoneum', '22': 'Pleura', '23': 'Prostate', '24': 'Skin', '25': 'Soft Tissue', '26': 'Testis', '27': 'Thymus', '28': 'Thyroid', '29': 'Uterus', '30': 'Vulva/Vagina', 'XX': 'Not available'}
@@ -1298,19 +1298,20 @@ def main(argv):
 
 				if(remisse_mail == True):
 					remisse_file = output_path + ipd_no + "_Remisse_draft.docx"
-					remisse_mail_writer(remisse_file,ipd_no,ipd_consent,DNA_normal_sampleID,RNA_sampleID,extraction_hospital,ipd_ori_name,TMB_DRUP,stable_text,sample_material,sample_type,sample_list,pipline)
+					remisse_mail_writer(remisse_file,ipd_no,ipd_consent,DNA_normal_sampleID,RNA_sampleID,extraction_hospital,ipd_ori_name,TMB_DRUP,stable_text,str(sample_material),sample_type,sample_list,pipline)
 				ipd_material_file = base_dir + "/In/MTF/" + ipd_no[:3] + '-' + ipd_no[3:] + "_Material Transit Form InPreD NGS.xlsx"
 				if os.path.exists(ipd_material_file):
 					move_ipd_material_file = shutil.move(ipd_material_file, extra_path)
 				DNA_if_generate_report = "-"
-				update_clinical_tsoppi_file(InPreD_clinical_tsoppi_data_file,DNA_sampleID,DNA_if_generate_report,ipd_birth_year,ipd_clinical_diagnosis,ipd_gender,ipd_consent,DNA_ori_name,ipd_collection_year,requisition_hospital,extraction_hospital,tumor_content_nr,batch_nr,sample_material,sample_type,tumor_type,str_TMB_DRUP,TMB_TSO500,MSI_TSO500,pipline)
-				if(RNA_sampleID != ""):
-					RNA_if_generate_report = "-"
-					RNA_str_TMB_DRUP = "-"
-					RNA_TMB_TSO500 = "-"
-					RNA_MSI_TSO500 = "-"
-					RNA_pipline = "-"
-					update_clinical_tsoppi_file(InPreD_clinical_tsoppi_data_file,RNA_sampleID,RNA_if_generate_report,ipd_birth_year,ipd_clinical_diagnosis,ipd_gender,ipd_consent,RNA_ori_name,ipd_collection_year,requisition_hospital,extraction_hospital,tumor_content_nr,batch_nr,sample_material,sample_type,tumor_type,RNA_str_TMB_DRUP,RNA_TMB_TSO500,RNA_MSI_TSO500,RNA_pipline)
+				if os.path.exists(InPreD_clinical_tsoppi_data_file):
+					update_clinical_tsoppi_file(InPreD_clinical_tsoppi_data_file,DNA_sampleID,DNA_if_generate_report,ipd_birth_year,ipd_clinical_diagnosis,ipd_gender,ipd_consent,DNA_ori_name,ipd_collection_year,requisition_hospital,extraction_hospital,tumor_content_nr,batch_nr,str(sample_material),sample_type,str(tumor_type),str_TMB_DRUP,TMB_TSO500,MSI_TSO500,pipline)
+					if(RNA_sampleID != ""):
+						RNA_if_generate_report = "-"
+						RNA_str_TMB_DRUP = "-"
+						RNA_TMB_TSO500 = "-"
+						RNA_MSI_TSO500 = "-"
+						RNA_pipline = "-"
+						update_clinical_tsoppi_file(InPreD_clinical_tsoppi_data_file,RNA_sampleID,RNA_if_generate_report,ipd_birth_year,ipd_clinical_diagnosis,ipd_gender,ipd_consent,RNA_ori_name,ipd_collection_year,requisition_hospital,extraction_hospital,tumor_content_nr,batch_nr,sample_material,sample_type,tumor_type,RNA_str_TMB_DRUP,RNA_TMB_TSO500,RNA_MSI_TSO500,RNA_pipline)
 	if(ppt_nr > 1):	
 		print("Go through the InPreD_PRONTO_metadata file, " + str(ppt_nr) +" reports are generated.")
 	else:
