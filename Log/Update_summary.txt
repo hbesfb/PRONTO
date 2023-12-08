@@ -3,22 +3,23 @@ PRONTO (rePort geneRator fOr iNpred Tumor bOards)
 2. All Clinical and meta data is stored in the file “InPreD_PRONTO_metadata.txt”. And the script will generate report for the samples with the column "Create_report==Y".
 3. The filtered variants are read from the TSOPPI file “..._small_variant_table_forQC.tsv” (should be generated within TSOPPI in the next version, until then we rename the file manually). 
 If this file does not exist in the TSOPPI results folder, the script will read from the file "..._small_variant_table.tsv" instead.
-4. In the header to the right in PP report, it is printed “Clinical_diagnosis” (from the meta data file). If unavailable, the PCGR tumor type is printed on slide 4-7. 
-5. No “tumor type” is printed in the left grey box.
-6. In the upper grey box on the left in PP report, print from the meta data file: “sex”, age (calculated from “Year_of_birth”), “Year_of_diagnosis” and “Requisition_hospital”. 
-7. Year in upper left is the same as the sequencing year (printed from the sequenced run id).
-8. The script checks if there is a matching RNA in the “sample-list” file in TSOPPI. 
+4. The output results will be saved into a folder named with runID and the subfolder named with the DNA sample ID.                
+5. In the header to the right in PP report, it is printed “Clinical_diagnosis” (from the meta data file). If unavailable, the PCGR tumor type is printed on slide 4-7. 
+6. No “tumor type” is printed in the left grey box.
+7. In the upper grey box on the left in PP report, print from the meta data file: “sex”, age (calculated from “Year_of_birth”), “Year_of_diagnosis” and “Requisition_hospital”. 
+8. Year in upper left is the same as the sequencing year (printed from the sequenced run id).
+9. The script checks if there is a matching RNA in the “sample-list” file in TSOPPI. 
 Within the meta data file, it then looks for both DNA and RNA information in the column “Sample_material_id_PS”, and print on two lines as follows: DNA: “Sample_material_id_PS”, RNA: “Sample_material_id_PS”.
-9. The printed text in the header is in white color. Blue header is behind the orange header. Darker color of the orange header. 
-10. Smaller text (size 9) for the Bio material; ex “primary tumor, post-treatment”.
-11. Bigger text (size X) for RNA fusion and splice findings. 
-12. The script Does not print “N=xx» in the header in the table to the right. 
-13. Updated description on the first page: “Variants of uncertain significance (VUS) refer to variants with unknown/unclear/inconclusive/contradictory functional consequence in cancer. Level of evidence for experimental treatment follows ESCAT guidelines and will be defined by the respective study/trial.”. 
+10. The printed text in the header is in white color. Blue header is behind the orange header. Darker color of the orange header. 
+11. Smaller text (size 9) for the Bio material; ex “primary tumor, post-treatment”.
+12. Bigger text (size X) for RNA fusion and splice findings. 
+13. The script Does not print “N=xx» in the header in the table to the right. 
+14. Updated description on the first page: “Variants of uncertain significance (VUS) refer to variants with unknown/unclear/inconclusive/contradictory functional consequence in cancer. Level of evidence for experimental treatment follows ESCAT guidelines and will be defined by the respective study/trial.”. 
 Unclear is updated to uncertain in the sentence “Variant of uncertain significance (VUS)”.
-14. Updated description of CN: “CN=copy number (assumes ploidy 2).” in slide 5 to 7.
-15. Updates in the table slide 8: one column added with information from “change_summary”, and one column added with the MTB format.
-16. New template with ctDNA info in the last slide.
-17. Added "inpred_node=" in configure file, so that script will print the node name into the header of the Power point report automatically.
-18. Bigger text (size 7) for the fusion text and the MS status in slide 2,6,7.
-19. The text locations of the PP report on top right area are bit higher.
-20. Updated description on the slide 6-7 right lower area: "#Variant of uncertain significance (VUS)".
+15. Updated description of CN: “CN=copy number (assumes ploidy 2).” in slide 5 to 7.
+16. Updates in the table slide 8: one column added with information from “change_summary”, and one column added with the MTB format.
+17. New template with ctDNA info in the last slide.
+18. Added "inpred_node=" in configure file, so that script will print the node name into the header of the Power point report automatically.
+19. Bigger text (size 7) for the fusion text and the MS status in slide 2,6,7.
+20. The text locations of the PP report on top right area are bit higher.
+21. Updated description on the slide 6-7 right lower area: "#Variant of uncertain significance (VUS)".
