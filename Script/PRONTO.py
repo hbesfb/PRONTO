@@ -347,11 +347,16 @@ def get_patient_info_from_MTF(ipd_material_file,ipd_no,DNA_sampleID,RNA_sampleID
 
 
 def get_RNA_ori_name(InPreD_clinical_data_file,RNA_sampleID):
+	RNA_ori_name_exist = False
 	with open(InPreD_clinical_data_file, 'r') as f:
 		for l in f:
 			if(RNA_sampleID == l.split('\t')[0]):
 				RNA_ori_name = l.split('\t')[8]
+				RNA_ori_name_exist = True
 	f.close()
+	if(RNA_ori_name_exist == False):
+		print("Warning: The "+ RNA_sampleID + " does not exist in the menta file! The report will be generated without RNA sample material ID!")
+		RNA_ori_name = ""
 	return RNA_ori_name
 
 
@@ -483,18 +488,18 @@ def insert_image_to_ppt(DNA_sampleID,DNA_normal_sampleID,RNA_sampleID,DNA_image_
 			if(RNA_sampleID in file and image_mark in file):
 				image = os.path.join(RNA_image_path,file)
 				RNA_image.append(image)
-	left0 =  Inches(2.88)
-	width0 = Inches(3.55)
-	height0 = Inches(2.18)
+	left0 =  Inches(3.20)
+	width0 = Inches(3.30)
+	height0 = Inches(1.75)
 	if(DNA_image != ''):
-		top = Inches(1.24)
+		top = Inches(1.55)
 		d = 0
 		for images in DNA_image:
 			left = left0 + d * width0
 			pic = slide.shapes.add_picture(images,left,top,width0,height0)
 			d = d + 1	
 	if(RNA_image != ''):
-		top = Inches(3.40)
+		top = Inches(3.44)
 		r = 0
 		for images in RNA_image:
 			left = left0 + r * width0
@@ -1130,14 +1135,14 @@ def main(argv):
 				try:
 					sample_type_string = file.split('-')[2]
 					sample_type_short = sample_type_string[0:1]
-					sample_type_list = {'M': 'Metastasis', 'T': 'Tumor', 'C': 'Cell-line', 'N': 'Normal/Control', 'P': 'Primary tumor\n naive', 'p': 'Primary tumor\n post-treatment', 'R': 'Regional met\n naive', 'r': 'Regional met\n post-treatment', 'D': 'Distal met\n naive', 'd': 'Distal met\n post-treatment', 'L': 'Liquid', 'X': 'Unknown'}
+					sample_type_list = {'M': 'Metastasis', 'T': 'Primary Tumor', 'C': 'Cell-line', 'N': 'Normal/Control', 'P': 'Primary tumor\n naive', 'p': 'Primary tumor\n post-treatment', 'R': 'Regional met\n naive', 'r': 'Regional met\n post-treatment', 'D': 'Distal met\n naive', 'd': 'Distal met\n post-treatment', 'L': 'Liquid', 'E': 'naive', 'e': 'post treatment', 'A': 'post allo transplant', 'X': 'Unknown'}
 					sample_type = sample_type_list.get(sample_type_short)
 				except:
 					sample_type = ""
 				try:
 					sample_material_string = file.split('-')[3]
 					sample_material_short = sample_material_string[0:1]
-					sample_material_list = {'F': 'Fresh Frozen', 'A': 'Archived FFPE', 'B': 'Blood', 'C': 'Cytology', 'M': 'Fresh bone marrow', 'S': 'Buccal swab (normal)', 'X': 'Unspecified'}
+					sample_material_list = {'F': 'Fresh Frozen', 'A': 'Archived FFPE', 'B': 'Blood', 'C': 'Cytology', 'M': 'Fresh bone marrow',  'E': 'Extramedullary','S': 'Buccal swab (normal)', 'X': 'Unspecified'}
 					sample_material = sample_material_list.get(sample_material_short)
 				except:
 					sample_material = ""
