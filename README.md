@@ -14,11 +14,11 @@ Under the downloaded folder and install the module with command: [sudo python se
 
 # File infrastructure
 INPUT:                                      
-Script/PRONTO.py                                    ---  The python script.                                                  
-Config/configure_PRONTO.ini                         ---  The configure file. Local changes is needed to set up.                                        
-In/Templates/MTB_template.pptx                      ---  The template file used for generating PP report.                                                      
-In/InPreD_PRONTO_metadata.txt                       ---  The clinical data file. Reports will be generated for the Sample_id with "Create_report==Y" in this file. 
-In/MTF/IPD-XXXX_Material Transit Form InPreD NGS.xlsx	---  The material file contains all patient personal information. (Used by OUS)                            
+Script/PRONTO.py                                      ---  The python script.                                                  
+Config/configure_PRONTO.ini                           ---  The configure file. Local changes is needed to set up.                                        
+In/Templates/MTB_template.pptx                        ---  The template file used for generating PP report.                                                      
+In/InPreD_PRONTO_metadata.txt                         ---  The clinical data file. Reports will be generated for the Sample_id with "Create_report==Y" in this file. 
+In/MTF/IPD-XXXX_Material Transit Form InPreD NGS.xlsx	---  The material file contains all patient personal information. (Used by OUS) This file will generate the inpred-samle-id following the nomenclature file.                          
                             
 OUTPUT:                  
 Out/$runID/IPDXXX					                          --- The folder contains all results for this sample.                       
