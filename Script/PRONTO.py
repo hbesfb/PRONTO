@@ -1060,7 +1060,7 @@ def main(argv):
 					if (DNA_run_dir == RNA_run_dir):
 						runID_RNA = runID_DNA
 					else:
-						RNA_run_dir_short = RNA_run_dir.split('/')[4]
+						RNA_run_dir_short = RNA_run_dir.split('/')[-1]
 						runID_RNA = RNA_run_dir_short.split('_TSO')[0]
 					RNA_ori_name = get_RNA_ori_name(InPreD_clinical_data_file,RNA_sampleID)
 					ipd_ori_name = "DNA:" + DNA_ori_name + ",RNA:" + RNA_ori_name
