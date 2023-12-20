@@ -51,8 +51,10 @@ Print the usage information of this tool.
 [python3 Script/InPreD_PRONTO.py]                                           
 Please remember to update the "Create_report" to "N" in file In/InPreD_PRONTO_metadata.txt manually after the report generation is finished!             
 
-Special commands used by OUS:                                                
-[python3 Script/InPreD_PRONTO.py -r <TSO500_runID> -D <DNA_sampleID> -c]                                                 
+Special commands used by OUS:               
+-c, --clinical_file: Fill the patient personal information into file InPreD_PRONTO_metadata.txt with the MTF files under the foder In/MTF/.      
+[python3 Script/InPreD_PRONTO.py -r <TSO500_runID> -D <DNA_sampleID> -c]            
+-m, --mail_draft: Generate the Remisse_draft.docx file with report.                         
 [python3 Script/InPreD_PRONTO.py -m]
 
 # PRONTO Docker
