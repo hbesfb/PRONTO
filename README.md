@@ -1,10 +1,10 @@
-# PRONTO
-**(rePort geneRator fOr iNpred Tumor bOards)**
+# PRONTO (rePort geneRator fOr iNpred Tumor bOards)
 
-This is a tool used to filter and analysis data from TSO500 results and generate the report based on the results data and template file.        
-This repository contains the configure, scripts, report template, file infrastructure and docker files to run this tool locally or in Docker/Singularity.
+PRONTO is a tool used to filter and analyse data from TSO500 analysis (in the form of [TSOPPI](https://tsoppi.readthedocs.io/en/latest/) results). It generates powerpoint patient reports using predefined powerpoint template file. This repository contains the config file, metadata files, executable script, report template, testing data, and docker files to run this tool locally or in Docker/Singularity. The repository is accompanied with a docker image that is automatically pushed to [dockerhub](https://hub.docker.com/r/inpred/pronto) on each version release.
 
-## Contents
+<br />
+
+## Table of contents
 
 1. [Requirments for running PRONTO locally](#requirments-for-running-pronto-locally)
 2. [Repository contents](#repository-contents)
@@ -13,6 +13,9 @@ This repository contains the configure, scripts, report template, file infrastru
 5. [PRONTO Docker](#pronto-docker)
 6. [PRONTO Singularity](#pronto-singularity)
 7. [ChangeLog](#changelog)
+
+
+<br />
 
 ## Requirments for running PRONTO locally
 
@@ -30,12 +33,14 @@ This repository contains the configure, scripts, report template, file infrastru
 		sudo pip3 install python-pptx                        
 		```
 3. Module xlrd and xlwt are needed for MTF importing function:                          
-	- Download the files from Internet. Please google search it and choose the correct version for your environment.                   
+	- Download the files from Internet. Please google search it and choose the correct version for your environment.
 	- Under the downloaded folder and install the module with command: 
  
 		```
 		sudo python setup.py install
 		```
+
+<br />
 
 ## Repository contents
 
@@ -47,7 +52,8 @@ This repository contains the configure, scripts, report template, file infrastru
 | `In/InPreD_PRONTO_metadata.txt` | The clinical data file. Reports will be generated for the `Sample_id` for which the `Create_report` value is set to `Y` in this file. |
 | `In/MTF/IPD-XXXX_Material Transit Form InPreD NGS.xlsx` | The material file contains all patient personal information. (Used by OUS) This file will generate the inpred-samle-id following the nomenclature file. | 
 
-</br>
+<br />
+<br />
 
 | OUTPUT file/folder name: | Details: |
 |:---|:---|
@@ -57,7 +63,8 @@ This repository contains the configure, scripts, report template, file infrastru
 | `Out/$runID/IPZXXXX/IPZXXXX_Remisse_draft.docx` | The remise draft file for email. (Used by OUS) |
 | `Out/InPreD_PRONTO_metadata_tsoppi.txt`	| The file contains clinical data and the TSOPPI results for all sample reports. |
 
-</br>
+<br />
+<br />
 
 | Files located in the `Testing_data` folder : | Details: |
 |:---|:---|
@@ -66,30 +73,39 @@ This repository contains the configure, scripts, report template, file infrastru
 | `$testRunID.zip` | The testing results from AcroMetrix sample TSOPPI results for your local comparisons. |
 | `testRunID="191206_NB501498_0174_AHWCNMBGXC"` ||
 
+
+<br />
+
 ## Run PRONTO locally
 
 ### Adapt the config file:
 
-- In `Config/configure_PRONTO.ini`, please specify your InPreD node with `inpred_node = `. This will appear in the header of the reports.
-- In `Config/configure_PRONTO.ini`, please specify the local dataset file path of TSOPPI results with `data_path = `.                         
+- In `Config/configure_PRONTO.ini`, please specify your InPreD node by defining value of the `inpred_node` parameter. The node name will appear in the header of the reports.
+- In `Config/configure_PRONTO.ini`, please specify the local dataset file path of TSOPPI results by defining value of the `data_path` parameter.
 
-### Type clinical data into `In/InPreD_PRONTO_metadata.txt`:
+### Type clinical data into the input metadata file:
 
 Manually write the clinical data into file `In/InPreD_PRONTO_metadata.txt`. Reports will be generated for the `Sample_id` for which the `Create_report` value is set to `Y` in this file.
 
-### Run `Script/PRONTO.py:` 
+### Run PRONTO: 
 
-Please run the script with `-h` or `--help` to print the usage information.                                                                                                       
-This script is a tool used to generate the paitent report based on the TSO500 analysis results and the personal intomation from the clinical data in `In/InPreD_PRONTO_metadata.txt`, and update the TSOPPI results into the file `Out/InPreD_PRONTO_metadata_tsoppi.txt` when the reports are generated.          
-This script could also fill the patient personal information into the clinical data file with the MTF files under the foder `In/MTF/`. (This fuction currently is only used by OUS)                                                                
-To run this script tool in your system with python3, it will read the clinical data from `In/InPreD_PRONTO_metadata.txt` and generate reports for the `Sample_id` with the `Create_report` set to `Y`.
+PRONTO takes in TSOPPI data, clinical info provided in `In/InPreD_PRONTO_metadata.txt`, and powerpoint template `In/Templates/MTB_template.pptx`. It generates a patient report for every `Sample_id` with the `Create_report` set to `Y` in the `Out` folder and updates the file `Out/InPreD_PRONTO_metadata_tsoppi.txt` with the TSOPPI results of the patients for which the reports were generated.
 
-Afterwards, execute the command as follows: 
+
+To print the usage information run the following command: 
+
+```
+python3 Script/PRONTO.py --help
+```
+
+To execute the command and generate the reports as defined in the input metadata file, run the command: 
 
 ```
 python3 Script/PRONTO.py 
 ```
 
+
+<br />
 
 ## Example commands
 
@@ -117,10 +133,9 @@ python3 Script/PRONTO.py -m
 - -m, --mail_draft: Generate the Remisse_draft.docx file with report.
 
 
+<br />
 
 ## PRONTO Docker
-
-PRONTO docker image is automatically pushed to dockerhub: https://hub.docker.com/r/inpred/pronto.
 
 ### Download the image with the latest tag:
 
@@ -151,10 +166,9 @@ sudo docker run \
 - `$pronto_output_dir` is the path in your local environment to store the reports generated by PRONTO.
 
 
+<br />
+
 ## PRONTO Singularity
-
-PRONTO docker image is automatically pushed to dockerhub: https://hub.docker.com/r/inpred/pronto and can be also pulled as a singularity image.
-
 
 ### Download PRONTO singularity image with the latest tag:
 
@@ -186,6 +200,8 @@ singularity exec \
 - `$InPreD_PRONTO_metadata_file` is your local InPreD meta data file which contains clinical data for the samples.                                      
 - `$pronto_output_dir` is the path in your local environment to store the reports generated by PRONTO.py.
 
+
+<br />
 
 ## ChangeLog
 
