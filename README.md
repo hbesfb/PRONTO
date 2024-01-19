@@ -1,4 +1,7 @@
-# PRONTO (rePort geneRator fOr iNpred Tumor bOards)
+# PRONTO 
+**(rePort geneRator fOr iNpred Tumor bOards)**
+
+<br />
 
 PRONTO is a tool used to filter and analyse data from TSO500 analysis (in the form of [TSOPPI](https://tsoppi.readthedocs.io/en/latest/) results). It generates powerpoint patient reports using predefined powerpoint template file. This repository contains the config file, metadata files, executable script, report template, testing data, and docker files to run this tool locally or in Docker/Singularity. The repository is accompanied with a docker image that is automatically pushed to [dockerhub](https://hub.docker.com/r/inpred/pronto) on each version release.
 
@@ -68,10 +71,11 @@ PRONTO is a tool used to filter and analyse data from TSO500 analysis (in the fo
 
 | Files located in the `Testing_data` folder : | Details: |
 |:---|:---|
+| `testRunID="191206_NB501498_0174_AHWCNMBGXC"` | `testRunID` is used in the following lines of this table as a shortcut for the full ID of the sequencing run, which is `191206_NB501498_0174_AHWCNMBGXC`.|
 | `$testRunID_TSO_500_LocalApp_postprocessing_results.zip` | The testing data from AcroMetrix sample TSOPPI results which only contains the files PRONTO needs. Move this folder into your local TSOPPI result path for testing. |
 | `InPreD_PRONTO_metadata.txt` | The file contains clinical data of AcroMetrix samples for testing. Move this file into `In` folder of this repository for testing. |
 | `$testRunID.zip` | The testing results from AcroMetrix sample TSOPPI results for your local comparisons. |
-| `testRunID="191206_NB501498_0174_AHWCNMBGXC"` ||
+
 
 
 <br />
