@@ -348,7 +348,7 @@ def get_patient_info_from_MTF(ipd_material_file,ipd_no,DNA_sampleID,RNA_sampleID
 
 def get_RNA_ori_name(InPreD_clinical_data_file,RNA_sampleID):
 	RNA_ori_name_exist = False
-	with open(InPreD_clinical_data_file, 'r') as f:
+	with open(InPreD_clinical_data_file, 'r', encoding="ISO-8859-1") as f:
 		for l in f:
 			if(RNA_sampleID == l.split('\t')[0]):
 				RNA_ori_name = l.split('\t')[8]
@@ -826,7 +826,7 @@ def update_clinical_master_file(InPreD_clinical_data_file,sample_id,if_generate_
 	global runID
 	if_exist = False
 	new_content = ""
-	with open(InPreD_clinical_data_file, 'r') as fr:
+	with open(InPreD_clinical_data_file, 'r', encoding="ISO-8859-1") as fr:
 		for ln in fr:
 			if(ln.split('\t')[0] == sample_id):
 				if_exist = True
@@ -838,11 +838,11 @@ def update_clinical_master_file(InPreD_clinical_data_file,sample_id,if_generate_
 	fr.close()
 	if(if_exist == False):
 		line = sample_id + "\t" + runID + "\t" + if_generate_report + "\t" + ipd_birth_year + "\t" + ipd_diagnosis_year + "\t" + clinical_diagnosis + "\t" + ipd_gender[0] + "\t" + ipd_consent + "\t" + ori_name + "\t" + ipd_collection_year + "\t" + requisition_hospital + "\t" + extraction_hospital + "\t" + str(tumor_content_nr) + "\t" +batch_nr + "\n"
-		with open(InPreD_clinical_data_file, 'a') as fa:
+		with open(InPreD_clinical_data_file, 'a', encoding="ISO-8859-1") as fa:
 			fa.write(line)
 		fa.close()
 	else:
-		with open(InPreD_clinical_data_file, 'w') as fw:
+		with open(InPreD_clinical_data_file, 'w', encoding="ISO-8859-1") as fw:
 			fw.write(new_content)
 		fw.close()
 
@@ -995,7 +995,7 @@ def main(argv):
 				print("Clinical data is added into PRONTO meta file for sample: " + RNA_sampleID)
 			sys.exit(0)
 	ppt_nr = 0
-	for ln in open(InPreD_clinical_data_file):
+	for ln in open(InPreD_clinical_data_file, encoding="ISO-8859-1"):
 		if not(ln.startswith("#")):
 			if(ln.split('\t')[2] == "Y"):
 				ln = ln.replace("\n", "")
