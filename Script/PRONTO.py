@@ -1001,7 +1001,7 @@ def main(argv):
 			sys.exit(0)
 	ppt_nr = 0
 	for ln in open(InPreD_clinical_data_file, encoding="ISO-8859-1"):
-		if not(ln.startswith("#")):
+		if not(ln.startswith("#") or ln == ""):
 			if(ln.split('\t')[2] == "Y"):
 				ln = ln.replace("\n", "")
 				global extra_path
