@@ -1075,7 +1075,8 @@ def main(argv):
 
 				for line in open(data_file_small_variant_table):
 					if(line.startswith("#") and "Version string:" in line):
-						pipline = line.split('] ')[1]
+						pipline = line.split('\t')[0]
+						pipline = pipline.split('] ')[1]
 						pipline = pipline.split('\n')[0]
 					if(line.startswith('#') and "Specified tumor purity" in line):
 						if("not specified" in line or "a default value of 0.5 is being used" in line):
