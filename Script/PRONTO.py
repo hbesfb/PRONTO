@@ -263,7 +263,7 @@ def get_patient_info_from_MTF(ipd_material_file,ipd_no,DNA_sampleID,RNA_sampleID
 	col_ex_library_pre = "Library Preparation (LP) Data"
 	col_extraction_hospital = "Extraction Hospital"
 	col_batch_nr = "LP batch"
-	col_clinical_diagnosis = "Clinical diagnosis"
+	col_clinical_diagnosis = "diagnosis"
 	ipd_birth_date = ""
 	sample_info_row = 0
 	extra_data_row = 0
@@ -297,7 +297,7 @@ def get_patient_info_from_MTF(ipd_material_file,ipd_no,DNA_sampleID,RNA_sampleID
 			if(sheet_material.cell_value(r,c) == col_age):
 				ipd_age = str(sheet_material.cell_value(r+2,c))
 			if(sheet_material.cell_value(r,c) == col_clinical_diagnosis):
-				ipd_clinical_diagnosis = str(sheet_material.cell_value(r+2,c))
+				ipd_clinical_diagnosis = str(sheet_material.cell_value(r+1,c))
 			if(sheet_material.cell_value(r,c) == col_consent and ipd_consent == ""):
 				ipd_consent = str(sheet_material.cell_value(r+2,c))
 				for r in range(r,(sample_info_row-2)):
@@ -399,7 +399,7 @@ def update_ppt_template_data(inpred_node,ipd_no,ipd_gender,ipd_age,ipd_diagnosis
 		tf2.paragraphs[0].font.color.rgb = RGBColor(250,250,250)
 		tf2.paragraphs[0].alignment = PP_ALIGN.CENTER
 		tf2.vertical_anchor = MSO_VERTICAL_ANCHOR.BOTTOM
-		textbox3 = slide.shapes.add_textbox(Inches(7.23), Inches(0.52), Inches(2.46), Inches(0.21))
+		textbox3 = slide.shapes.add_textbox(Inches(7.23), Inches(0.52), Inches(2.53), Inches(0.21))
 		tf3 = textbox3.text_frame
 		tf3.paragraphs[0].text = pipline
 		tf3.paragraphs[0].font.size = Pt(7)
@@ -420,13 +420,21 @@ def update_ppt_template_data(inpred_node,ipd_no,ipd_gender,ipd_age,ipd_diagnosis
 		tf6.paragraphs[0].text = tumor_content
 		tf6.paragraphs[0].font.size = Pt(14)
 		tf6.paragraphs[0].alignment = PP_ALIGN.CENTER
-		textbox7 = slide.shapes.add_textbox(Inches(5.77), Inches(0.19), Inches(0.86), Inches(0.33))
-		tf7 = textbox7.text_frame
 		if(index == 1 or ipd_clinical_diagnosis == "-" or ipd_clinical_diagnosis == ""):
+			textbox7 = slide.shapes.add_textbox(Inches(5.77), Inches(0.19), Inches(0.86), Inches(0.33))
+			tf7 = textbox7.text_frame
 			tf7.paragraphs[0].text = str(tumor_type)
+			tf7.paragraphs[0].font.size = Pt(14)
 		else:
+			if('\n' in ipd_clinical_diagnosis):
+				textbox7 = slide.shapes.add_textbox(Inches(4.95), Inches(0.11), Inches(2.36), Inches(0.50))
+				tf7 = textbox7.text_frame
+				tf7.paragraphs[0].font.size = Pt(12)
+			else:
+				textbox7 = slide.shapes.add_textbox(Inches(5.77), Inches(0.19), Inches(0.86), Inches(0.33))
+				tf7 = textbox7.text_frame
+				tf7.paragraphs[0].font.size = Pt(14)
 			tf7.paragraphs[0].text = ipd_clinical_diagnosis
-		tf7.paragraphs[0].font.size = Pt(14)
 		tf7.paragraphs[0].font.italic = True
 		tf7.paragraphs[0].font.color.rgb = RGBColor(250,250,250)
 		tf7.paragraphs[0].alignment = PP_ALIGN.CENTER
@@ -831,7 +839,7 @@ def update_clinical_master_file(InPreD_clinical_data_file,sample_id,if_generate_
 	global runID
 	if_exist = False
 	new_content = ""
-	with open(InPreD_clinical_data_file, 'r', encoding="ISO-8859-1") as fr:
+	with open(InPreD_clinical_data_file, 'r') as fr:
 		for ln in fr:
 			if(ln.split('\t')[0] == sample_id):
 				if_exist = True
@@ -843,11 +851,11 @@ def update_clinical_master_file(InPreD_clinical_data_file,sample_id,if_generate_
 	fr.close()
 	if(if_exist == False):
 		line = sample_id + "\t" + runID + "\t" + if_generate_report + "\t" + ipd_birth_year + "\t" + ipd_diagnosis_year + "\t" + clinical_diagnosis + "\t" + ipd_gender[0] + "\t" + ipd_consent + "\t" + material_id + "\t" + ipd_collection_year + "\t" + requisition_hospital + "\t" + extraction_hospital + "\t" + str(tumor_content_nr) + "\t" +batch_nr + "\n"
-		with open(InPreD_clinical_data_file, 'a', encoding="ISO-8859-1") as fa:
+		with open(InPreD_clinical_data_file, 'a') as fa:
 			fa.write(line)
 		fa.close()
 	else:
-		with open(InPreD_clinical_data_file, 'w', encoding="ISO-8859-1") as fw:
+		with open(InPreD_clinical_data_file, 'w') as fw:
 			fw.write(new_content)
 		fw.close()
 
@@ -981,7 +989,7 @@ def main(argv):
 	if(update_clinical_file == True):
 		if not(re.fullmatch(DNA_sampleID_format, DNA_sampleID)):
 			print("Warning: " + DNA_sampleID + " does not fit for the sample id format!")
-		ipd_material_file = base_dir + "/In/MTF/" + ipd_no[:3] + '-' + ipd_no[3:] + "_Material Transit Form InPreD NGS.xlsx"
+		ipd_material_file = base_dir + "/In/MTF/" + ipd_no[:3] + '-' + ipd_no[3:] + "_Material Transit Form InPreD NGS_2024.xlsx"
 		if not os.path.exists(ipd_material_file):
 			print ("""Error: IPD Material Transit Form InPreD NGS file does not exit under the MTF dir. PRONTO meta file could not be updated with patient personal information by parameter -c of this script!""")
 			sys.exit(0)
@@ -1000,7 +1008,7 @@ def main(argv):
 				print("Clinical data is added into PRONTO meta file for sample: " + RNA_sampleID)
 			sys.exit(0)
 	ppt_nr = 0
-	for ln in open(InPreD_clinical_data_file, encoding="ISO-8859-1"):
+	for ln in open(InPreD_clinical_data_file):
 		if not(ln.startswith("#") or ln == ""):
 			if(ln.split('\t')[2] == "Y"):
 				ln = ln.replace("\n", "")
@@ -1012,7 +1020,7 @@ def main(argv):
 				runID = runID_DNA
 				ipd_birth_year = ln.split('\t')[3]
 				ipd_diagnosis_year = ln.split('\t')[4]
-				ipd_clinical_diagnosis = ln.split('\t')[5]
+				ipd_clinical_diagnosis_meta = ln.split('\t')[5]
 				ipd_gender = ln.split('\t')[6]
 				ipd_consent = ln.split('\t')[7]
 				DNA_material_id = ln.split('\t')[8]
@@ -1028,6 +1036,10 @@ def main(argv):
 				except:
 					ipd_age = "-"
 				ipd_no = DNA_sampleID.split('-')[0]
+				try:
+					ipd_clinical_diagnosis = ipd_clinical_diagnosis_meta.split("(")[0] + "\n(" + ipd_clinical_diagnosis_meta.split("(")[1]
+				except:
+					ipd_clinical_diagnosis = ipd_clinical_diagnosis_meta
 				output_path = output_path_root + runID + "/" + DNA_sampleID + "/"
 				extra_path = output_path + "extra_files"
 				output_file_preMTB_table_path = output_path + DNA_sampleID
@@ -1224,7 +1236,6 @@ def main(argv):
 				else:
 					TMB_DRUP = round(rows_TMB_DRUP_AFTumor/target_cod_region)
 					TMB_DRUP_str = str(rows_TMB_DRUP_AFTumor) + '/' + str(target_cod_region)
-
 
 				update_ppt_template_data(inpred_node,ipd_no,ipd_gender,ipd_age,ipd_diagnosis_year,DNA_material_id,RNA_material_id,ipd_consent,requisition_hospital,ipd_clinical_diagnosis,tumor_type,sample_type,sample_material,pipline,tumor_content,ppt_template,output_ppt_file)
 
