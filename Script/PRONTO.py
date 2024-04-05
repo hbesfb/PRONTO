@@ -360,7 +360,7 @@ def get_RNA_material_id(InPreD_clinical_data_file,RNA_sampleID):
 				RNA_material_id_exist = True
 	f.close()
 	if(RNA_material_id_exist == False):
-		print("Warning: The "+ RNA_sampleID + " does not exist in the menta file! The report will be generated without RNA sample material ID!")
+		print("Warning: The "+ RNA_sampleID + " does not exist in the meta file! The report will be generated without RNA sample material ID!")
 		RNA_material_id = ""
 	return RNA_material_id
 
@@ -524,6 +524,8 @@ def insert_image_to_ppt(DNA_sampleID,DNA_normal_sampleID,RNA_sampleID,DNA_image_
 def insert_table_to_ppt(table_data_file,slide_n,table_name,left_h,top_h,width_h,left_t,top_t,width_t,height_t,font_size,table_header,output_ppt_file,if_print_rowNo):
 	table_file = open(table_data_file)
 	lines = table_file.readlines()
+	if not lines:
+		return
 	first_line = lines[0]
 	rows = len(lines)
 	first_line_cells = first_line.split('\t')
@@ -764,6 +766,7 @@ def remisse_mail_writer(remisse_file,ipd_no,ipd_consent,DNA_normal_sampleID,RNA_
 	from docx.enum.text import WD_ALIGN_PARAGRAPH
 	impress_id = ipd_consent
 	sample_type = sample_type.replace("\n", "")
+	TMB_position = "Not available"
 	doc = Document()
 	doc.styles['Normal'].font.name = 'Calibri'
 	doc.styles['Normal'].font.size = Pt(12)
@@ -950,6 +953,8 @@ def main(argv):
 	DNA_normal_sampleID = ""
 	remisse_mail = False
 	update_clinical_file = False
+	target_cod_region = 0
+	tumor_content = "XX"
 	try:
 		opts, args = getopt.getopt(sys.argv[1:], "hr:D:mc", ["help", "runID=", "DNAsampleID=", "mailDraft", "clinicalFile"])
 	except getopt.GetoptError:
@@ -1116,7 +1121,7 @@ def main(argv):
 						if(j == "1"):
 							filter1_min_depth_tumor_DNA = int(cfg.get("FILTER"+j, "min_depth_tumor_DNA"))
 							all_data = read_exl(data_file_small_variant_table,filter_column,key_word)
-							if(all_data == ""):
+							if(all_data == []):
 								all_data_config_DepthTumor_DNA = ""
 							else:
 								all_data_config_DepthTumor_DNA = filter_depth_tumor_all_col(all_data,filter1_min_depth_tumor_DNA)
@@ -1131,7 +1136,7 @@ def main(argv):
 					if(j == "1"):
 						filter1_min_depth_tumor_DNA = int(cfg.get("FILTER"+j, "min_depth_tumor_DNA"))
 						data = read_exl_col(data_file_small_variant_table,filter_column,key_word,columns,MTB_format)
-						if(data == ""):
+						if(data == []):
 							data_DepthTumor_DNA = ""
 						else:
 							data_DepthTumor_DNA = filter_depth_tumor_cols(data,filter1_min_depth_tumor_DNA)
