@@ -351,13 +351,16 @@ def get_patient_info_from_MTF(ipd_material_file,ipd_no,DNA_sampleID,RNA_sampleID
 			inclusion_site = "Inclusion site"
 
 
-def get_RNA_material_id(InPreD_clinical_data_file,RNA_sampleID):
+def get_RNA_material_id(InPreD_clinical_data_file,RNA_sampleID,encoding_sys):
 	RNA_material_id_exist = False
-	with open(InPreD_clinical_data_file, 'r', encoding="ISO-8859-1") as f:
-		for l in f:
-			if(RNA_sampleID == l.split('\t')[0]):
-				RNA_material_id = l.split('\t')[8]
-				RNA_material_id_exist = True
+	if(encoding_sys != ""):
+		f = open(InPreD_clinical_data_file, 'r', encoding=encoding_sys)
+	else:
+		f = open(InPreD_clinical_data_file, 'r')
+	for l in f:
+		if(RNA_sampleID == l.split('\t')[0]):
+			RNA_material_id = l.split('\t')[8]
+			RNA_material_id_exist = True
 	f.close()
 	if(RNA_material_id_exist == False):
 		print("Warning: The "+ RNA_sampleID + " does not exist in the meta file! The report will be generated without RNA sample material ID!")
@@ -841,29 +844,42 @@ def remisse_mail_writer(remisse_file,ipd_no,ipd_consent,DNA_normal_sampleID,RNA_
 	doc.save(remisse_file)
 
 
-def update_clinical_master_file(InPreD_clinical_data_file,sample_id,if_generate_report,ipd_birth_year,clinical_diagnosis,ipd_gender,ipd_consent,material_id,ipd_collection_year,requisition_hospital,extraction_hospital,tumor_content_nr,batch_nr):
+def update_clinical_master_file(InPreD_clinical_data_file,sample_id,if_generate_report,ipd_birth_year,clinical_diagnosis,ipd_gender,ipd_consent,material_id,ipd_collection_year,requisition_hospital,extraction_hospital,tumor_content_nr,batch_nr,encoding_sys):
 	global ipd_diagnosis_year
 	global runID
 	if_exist = False
 	new_content = ""
-	with open(InPreD_clinical_data_file, 'r') as fr:
-		for ln in fr:
-			if(ln.split('\t')[0] == sample_id):
-				if_exist = True
-				line = sample_id + "\t" + runID + "\t" + if_generate_report + "\t" + ipd_birth_year + "\t" + ipd_diagnosis_year + "\t" + clinical_diagnosis + "\t" + ipd_gender[0] + "\t" + ipd_consent + "\t" + material_id + "\t" + ipd_collection_year + "\t" + requisition_hospital + "\t" + extraction_hospital + "\t" + str(tumor_content_nr) + "\t" +batch_nr + "\n"
-				new_line = ln.replace(ln,line)
-				new_content = new_content + new_line
-			else:
-				new_content = new_content + ln
+	if(encoding_sys != ""):
+		fr = open(InPreD_clinical_data_file, 'r', encoding=encoding_sys)
+	else:
+		fr = open(InPreD_clinical_data_file, 'r')
+	for ln in fr:
+		if(ln.split('\t')[0] == sample_id):
+			if_exist = True
+			line = sample_id + "\t" + runID + "\t" + if_generate_report + "\t" + ipd_birth_year + "\t" + ipd_diagnosis_year + "\t" + clinical_diagnosis + "\t" + ipd_gender[0] + "\t" + ipd_consent + "\t" + material_id + "\t" + ipd_collection_year + "\t" + requisition_hospital + "\t" + extraction_hospital + "\t" + str(tumor_content_nr) + "\t" +batch_nr + "\n"
+			new_line = ln.replace(ln,line)
+			new_content = new_content + new_line
+		else:
+			new_content = new_content + ln
 	fr.close()
+	if(encoding_sys != ""):
+		fa = open(InPreD_clinical_data_file, 'a', encoding=encoding_sys)
+	else:
+		fa = open(InPreD_clinical_data_file, 'a')
 	if(if_exist == False):
 		line = sample_id + "\t" + runID + "\t" + if_generate_report + "\t" + ipd_birth_year + "\t" + ipd_diagnosis_year + "\t" + clinical_diagnosis + "\t" + ipd_gender[0] + "\t" + ipd_consent + "\t" + material_id + "\t" + ipd_collection_year + "\t" + requisition_hospital + "\t" + extraction_hospital + "\t" + str(tumor_content_nr) + "\t" +batch_nr + "\n"
-		with open(InPreD_clinical_data_file, 'a') as fa:
-			fa.write(line)
+		if(encoding_sys != ""):
+			fa = open(InPreD_clinical_data_file, 'a', encoding=encoding_sys)
+		else:
+			fa = open(InPreD_clinical_data_file, 'a')
+		fa.write(line)
 		fa.close()
 	else:
-		with open(InPreD_clinical_data_file, 'w') as fw:
-			fw.write(new_content)
+		if(encoding_sys != ""):
+			fw = open(InPreD_clinical_data_file, 'w', encoding=encoding_sys)
+		else:
+			fw = open(InPreD_clinical_data_file, 'w')
+		fw.write(new_content)
 		fw.close()
 
 
@@ -988,6 +1004,7 @@ def main(argv):
 	cfg.read(config_file)
 	inpred_node = cfg.get("INPUT", "inpred_node")
 	data_path = cfg.get("INPUT", "data_path")
+	encoding_sys = cfg.get("INPUT", "encoding_sys")
 	filter_col_nu_config = int(cfg.get("INPUT", "filter_col_nu"))
 
 	if not os.path.exists(InPreD_clinical_data_file):
@@ -1009,15 +1026,19 @@ def main(argv):
 					RNA_sampleID = line.split('\t')[1]
 			get_patient_info_from_MTF(ipd_material_file,ipd_no,DNA_sampleID,RNA_sampleID)
 			if_generate_report = "Y"
-			update_clinical_master_file(InPreD_clinical_data_file,DNA_sampleID,if_generate_report,ipd_birth_year,ipd_clinical_diagnosis,ipd_gender,ipd_consent,DNA_material_id,ipd_collection_year,requisition_hospital,extraction_hospital,tumor_content_nr,batch_nr)
+			update_clinical_master_file(InPreD_clinical_data_file,DNA_sampleID,if_generate_report,ipd_birth_year,ipd_clinical_diagnosis,ipd_gender,ipd_consent,DNA_material_id,ipd_collection_year,requisition_hospital,extraction_hospital,tumor_content_nr,batch_nr,encoding_sys)
 			print("Clinical data is added into PRONTO meta file for sample: " + DNA_sampleID)
 			if(RNA_sampleID != ""):
 				if_generate_report = "-"
-				update_clinical_master_file(InPreD_clinical_data_file,RNA_sampleID,if_generate_report,ipd_birth_year,ipd_clinical_diagnosis,ipd_gender,ipd_consent,RNA_material_id,ipd_collection_year,requisition_hospital,extraction_hospital,tumor_content_nr,batch_nr)
+				update_clinical_master_file(InPreD_clinical_data_file,RNA_sampleID,if_generate_report,ipd_birth_year,ipd_clinical_diagnosis,ipd_gender,ipd_consent,RNA_material_id,ipd_collection_year,requisition_hospital,extraction_hospital,tumor_content_nr,batch_nr,encoding_sys)
 				print("Clinical data is added into PRONTO meta file for sample: " + RNA_sampleID)
 			sys.exit(0)
 	ppt_nr = 0
-	for ln in open(InPreD_clinical_data_file):
+	if(encoding_sys != ""):
+		meta_file = open(InPreD_clinical_data_file, encoding=encoding_sys)
+	else:
+		meta_file = open(InPreD_clinical_data_file)
+	for ln in meta_file:
 		if not(ln.startswith("#") or ln == ""):
 			if(ln.split('\t')[2] == "Y"):
 				ln = ln.replace("\n", "")
@@ -1046,9 +1067,9 @@ def main(argv):
 					ipd_age = "-"
 				ipd_no = DNA_sampleID.split('-')[0]
 				try:
-					ipd_clinical_diagnosis = ipd_clinical_diagnosis_meta.split("(")[0] + "\n(" + ipd_clinical_diagnosis_meta.split("(")[1]
+					ipd_clinical_diagnosis_ppt = ipd_clinical_diagnosis_meta.split("(")[0] + "\n(" + ipd_clinical_diagnosis_meta.split("(")[1]
 				except:
-					ipd_clinical_diagnosis = ipd_clinical_diagnosis_meta
+					ipd_clinical_diagnosis_ppt = ipd_clinical_diagnosis_meta
 				output_path = output_path_root + runID + "/" + DNA_sampleID + "/"
 				extra_path = output_path + "extra_files"
 				output_file_preMTB_table_path = output_path + DNA_sampleID
@@ -1089,7 +1110,7 @@ def main(argv):
 					else:
 						RNA_run_dir_short = RNA_run_dir.split('/')[-1]
 						runID_RNA = RNA_run_dir_short.split('_TSO')[0]
-					RNA_material_id = get_RNA_material_id(InPreD_clinical_data_file,RNA_sampleID)
+					RNA_material_id = get_RNA_material_id(InPreD_clinical_data_file,RNA_sampleID,encoding_sys)
 					ipd_material_id = "DNA:" + DNA_material_id + ",RNA:" + RNA_material_id
 				else:
 					ipd_material_id = "DNA:" + DNA_material_id
@@ -1246,7 +1267,7 @@ def main(argv):
 					TMB_DRUP = round(rows_TMB_DRUP_AFTumor/target_cod_region)
 					TMB_DRUP_str = str(rows_TMB_DRUP_AFTumor) + '/' + str(target_cod_region)
 
-				update_ppt_template_data(inpred_node,ipd_no,ipd_gender,ipd_age,ipd_diagnosis_year,DNA_material_id,RNA_material_id,ipd_consent,requisition_hospital,ipd_clinical_diagnosis,tumor_type,sample_type,sample_material,pipline,tumor_content,ppt_template,output_ppt_file)
+				update_ppt_template_data(inpred_node,ipd_no,ipd_gender,ipd_age,ipd_diagnosis_year,DNA_material_id,RNA_material_id,ipd_consent,requisition_hospital,ipd_clinical_diagnosis_ppt,tumor_type,sample_type,sample_material,pipline,tumor_content,ppt_template,output_ppt_file)
 
 				insert_image_to_ppt(DNA_sampleID,DNA_normal_sampleID,RNA_sampleID,DNA_image_path,RNA_image_path,output_ppt_file)
 
@@ -1337,7 +1358,7 @@ def main(argv):
 				if(remisse_mail == True):
 					remisse_file = output_path + ipd_no + "_Remisse_draft.docx"
 					remisse_mail_writer(remisse_file,ipd_no,ipd_consent,DNA_normal_sampleID,RNA_sampleID,extraction_hospital,ipd_material_id,TMB_DRUP,stable_text,str(sample_material),sample_type,sample_list,pipline)
-				ipd_material_file = base_dir + "/In/MTF/" + ipd_no[:3] + '-' + ipd_no[3:] + "_Material Transit Form InPreD NGS.xlsx"
+				ipd_material_file = base_dir + "/In/MTF/" + ipd_no[:3] + '-' + ipd_no[3:] + "_Material Transit Form InPreD NGS_2024.xlsx"
 				if os.path.exists(ipd_material_file):
 					move_ipd_material_file = shutil.move(ipd_material_file, extra_path)
 				if os.path.exists(InPreD_clinical_tsoppi_data_file):
