@@ -231,7 +231,123 @@ def clear_blank_line(file_in,file_out):
 	os.remove(file_in)
 
 
-def get_patient_info_from_MTF(ipd_material_file,ipd_no,DNA_sampleID,RNA_sampleID):
+def get_patient_info_from_MTF_2023(ipd_material_file,ipd_no,DNA_sampleID,RNA_sampleID):
+	import xlrd
+	global ipd_birth_year
+	global ipd_gender
+	global ipd_consent
+	global DNA_material_id
+	global RNA_material_id
+	global ipd_collection_year
+	global requisition_hospital
+	global extraction_hospital
+	global batch_nr
+	global tumor_content_nr
+	global inclusion_site
+	open_exl_material = xlrd.open_workbook(ipd_material_file)
+	sheet_material = open_exl_material.sheet_by_index(0)
+	nrows_material = sheet_material.nrows
+	ncols_material = sheet_material.ncols
+	col_ipd = "InPreD ID"
+	col_gender = "Gender"
+	col_age = "Age"
+	col_birth_date = "Date of birth"
+	col_requisition_hospital = "Requester Hospital"
+	col_material_name = "Original Name"
+	col_consent = "Study ID"
+	col_tumor_content_nr = "Tumor cells [%]"
+	col_sampleID_ori_name = "Sample ID"
+	col_ex_sample_info = "Sample information"
+	col_ex_data_section = "Extraction Data"
+	col_ex_library_pre = "Library Preparation (LP) Data"
+	col_extraction_hospital = "Extraction Hospital"
+	col_batch_nr = "LP batch"
+	ipd_birth_date = ""
+	sample_info_row = 0
+	extra_data_row = 0
+	library_pre_row = 0
+	for l in range(nrows_material):
+		if(sheet_material.cell_value(l,0) == col_ex_sample_info):
+			sample_info_row = l
+		if(sheet_material.cell_value(l,0) == col_ex_data_section):
+			extra_data_row = l
+		if(sheet_material.cell_value(l,0) == col_ex_library_pre):
+			library_pre_row = l
+	for r in range(nrows_material):
+		for c in range(ncols_material):
+			if(sheet_material.cell_value(r,c) == col_ipd):
+				ipd_MTF = sheet_material.cell_value(r+2,c)
+				if(ipd_MTF != ipd_no):
+					print("""               Error:
+			The InPreD patient ID in IPD Material Transit Form InPreD NGS file does not match with the IPD number! 
+			Please check and fix the mistake before run this script again!""")
+					print("                 IPD is " + ipd_MTF + " in MTF, while IPD is " + ipd_no[3:] + " in TSO500.")
+					sys.exit(0)
+			if(sheet_material.cell_value(r,c) == col_birth_date):
+				ipd_birth_date_exl = sheet_material.cell_value(r+2,c)
+				try:
+					datetime_date = str(xlrd.xldate_as_datetime(ipd_birth_date_exl,0))
+					ipd_birth_year = datetime_date.split('-')[0]
+				except:
+					ipd_birth_year = "-"
+			if(sheet_material.cell_value(r,c) == col_gender and ipd_gender == ""):
+				ipd_gender = str(sheet_material.cell_value(r+2,c))
+			if(sheet_material.cell_value(r,c) == col_age):
+				ipd_age = str(sheet_material.cell_value(r+2,c))
+			if(sheet_material.cell_value(r,c) == col_consent and ipd_consent == ""):
+				ipd_consent = str(sheet_material.cell_value(r+2,c))
+				for r in range(r,(sample_info_row-2)):
+					if(ipd_consent == "0.0"):
+						ipd_consent = ""
+					if(sheet_material.cell_value(r,6) == col_requisition_hospital and requisition_hospital == ""):
+						requisition_hospital = sheet_material.cell_value(r+2,6)
+					if((sheet_material.cell_value(r+2,c) != "" or sheet_material.cell_value(r+2,c) != "-" or sheet_material.cell_value(r+2,c) != "0.0") and str(sheet_material.cell_value(r+2,c)) not in ipd_consent):
+						if(ipd_consent == ""):
+							ipd_consent = str(sheet_material.cell_value(r+2,c))
+						else:
+							ipd_consent = ipd_consent + "," + str(sheet_material.cell_value(r+2,c))
+						continue
+			if(sheet_material.cell_value(r,c) == col_material_name and ipd_material_id == ""):
+				for r in range(r,(extra_data_row-2)):
+					if(sheet_material.cell_value(r+2,9) == DNA_sampleID and sheet_material.cell_value(r+2,c) != "" and str(sheet_material.cell_value(r+2,c)) not in DNA_material_id):
+						if(DNA_material_id == ""):
+							DNA_material_id = str(sheet_material.cell_value(r+2,c))
+						else:
+							DNA_material_id = DNA_material_id + "," + str(sheet_material.cell_value(r+2,c))
+						tumor_content_nr = sheet_material.cell_value(r+2,2)
+						continue
+					if(RNA_sampleID != "" and sheet_material.cell_value(r+2,9) == RNA_sampleID and sheet_material.cell_value(r+2,c) != "" and str(sheet_material.cell_value(r+2,c)) not in RNA_material_id):
+						if(RNA_material_id == ""):
+							RNA_material_id = str(sheet_material.cell_value(r+2,c))
+						else:
+							RNA_material_id = RNA_material_id + "," + str(sheet_material.cell_value(r+2,c))
+						continue
+			if(sheet_material.cell_value(r,c) == col_extraction_hospital and extraction_hospital == ""):
+				for r in range(r,(library_pre_row-2)):
+					if(sheet_material.cell_value(r+2,8) == DNA_sampleID):
+						extraction_hospital = str(sheet_material.cell_value(r+2,c))
+						break
+			if(sheet_material.cell_value(r,c) == col_batch_nr and batch_nr == ""):
+				for r in range(r,(nrows_material-2)):
+					if(sheet_material.cell_value(r+2,0) == DNA_sampleID):
+						batch_nr = str(sheet_material.cell_value(r+2,c))
+	open_exl_material.release_resources()
+	if(ipd_consent == "0.0"):
+		ipd_consent = ""
+	if(ipd_age == "" and ipd_birth_date != ""):
+		ipd_age = "<1"
+	inclusion_site_list = {'R': 'Radium', 'U': 'Ullevål', 'C': 'Riksen', 'A': 'Ahus', 'D': 'Drammen', 'B': 'Bærum', 'G': 'Gjøvik', 'I': 'Hamar', 'L': 'Lillehammer', 'T': 'Vestfold', 'K': 'Sørlandet', 'Q': 'Østfold', 'V': 'Telemark', 'Y': 'Lovisenberg', 'H': 'Haukeland', 'S': 'Stavanger', 'E': 'Fonna', 'F': 'Førde', 'O': 'St.Olavs', 'M': 'Nord-trøndelag', 'J': 'Møre og Romsdal', 'N': 'Nord Norge', 'P': 'Nordland'}
+	if("IKKE IMPRESS" in ipd_consent):
+		inclusion_site = ""
+	else:
+		try:
+			site_letter_code = ipd_consent[-6]
+			inclusion_site = inclusion_site_list.get(site_letter_code)
+		except:
+			inclusion_site = "Inclusion site"
+
+
+def get_patient_info_from_MTF_2024(ipd_material_file,ipd_no,DNA_sampleID,RNA_sampleID):
 	import xlrd
 	global ipd_birth_year
 	global ipd_clinical_diagnosis
@@ -1015,8 +1131,9 @@ def main(argv):
 	if(update_clinical_file == True):
 		if not(re.fullmatch(DNA_sampleID_format, DNA_sampleID)):
 			print("Warning: " + DNA_sampleID + " does not fit for the sample id format!")
-		ipd_material_file = base_dir + "/In/MTF/" + ipd_no[:3] + '-' + ipd_no[3:] + "_Material Transit Form InPreD NGS_2024.xlsx"
-		if not os.path.exists(ipd_material_file):
+		ipd_material_file_2024 = base_dir + "/In/MTF/" + ipd_no[:3] + '-' + ipd_no[3:] + "_Material Transit Form InPreD NGS_2024.xlsx"
+		ipd_material_file_2023 = base_dir + "/In/MTF/" + ipd_no[:3] + '-' + ipd_no[3:] + "_Material Transit Form InPreD NGS.xlsx"
+		if not (os.path.exists(ipd_material_file_2024) or os.path.exists(ipd_material_file_2023)):
 			print ("""Error: IPD Material Transit Form InPreD NGS file does not exit under the MTF dir. PRONTO meta file could not be updated with patient personal information by parameter -c of this script!""")
 			sys.exit(0)
 		else:
@@ -1024,7 +1141,10 @@ def main(argv):
 			for line in open(sample_list_file):
 				if(line.startswith("RNA_tumor")):
 					RNA_sampleID = line.split('\t')[1]
-			get_patient_info_from_MTF(ipd_material_file,ipd_no,DNA_sampleID,RNA_sampleID)
+			if os.path.exists(ipd_material_file_2024):
+				get_patient_info_from_MTF_2024(ipd_material_file_2024,ipd_no,DNA_sampleID,RNA_sampleID)
+			if os.path.exists(ipd_material_file_2023):
+				get_patient_info_from_MTF_2023(ipd_material_file_2023,ipd_no,DNA_sampleID,RNA_sampleID)
 			if_generate_report = "Y"
 			update_clinical_master_file(InPreD_clinical_data_file,DNA_sampleID,if_generate_report,ipd_birth_year,ipd_clinical_diagnosis,ipd_gender,ipd_consent,DNA_material_id,ipd_collection_year,requisition_hospital,extraction_hospital,tumor_content_nr,batch_nr,encoding_sys)
 			print("Clinical data is added into PRONTO meta file for sample: " + DNA_sampleID)
@@ -1358,9 +1478,12 @@ def main(argv):
 				if(remisse_mail == True):
 					remisse_file = output_path + ipd_no + "_Remisse_draft.docx"
 					remisse_mail_writer(remisse_file,ipd_no,ipd_consent,DNA_normal_sampleID,RNA_sampleID,extraction_hospital,ipd_material_id,TMB_DRUP,stable_text,str(sample_material),sample_type,sample_list,pipline)
-				ipd_material_file = base_dir + "/In/MTF/" + ipd_no[:3] + '-' + ipd_no[3:] + "_Material Transit Form InPreD NGS_2024.xlsx"
-				if os.path.exists(ipd_material_file):
-					move_ipd_material_file = shutil.move(ipd_material_file, extra_path)
+				ipd_material_file_2024 = base_dir + "/In/MTF/" + ipd_no[:3] + '-' + ipd_no[3:] + "_Material Transit Form InPreD NGS_2024.xlsx"
+				ipd_material_file_2023 = base_dir + "/In/MTF/" + ipd_no[:3] + '-' + ipd_no[3:] + "_Material Transit Form InPreD NGS.xlsx"
+				if os.path.exists(ipd_material_file_2024):
+					move_ipd_material_file = shutil.move(ipd_material_file_2024, extra_path)
+				if os.path.exists(ipd_material_file_2023):
+					move_ipd_material_file = shutil.move(ipd_material_file_2023, extra_path)
 				if os.path.exists(InPreD_clinical_tsoppi_data_file):
 					DNA_if_generate_report = "-"
 					update_clinical_tsoppi_file(InPreD_clinical_tsoppi_data_file,DNA_sampleID,DNA_if_generate_report,ipd_birth_year,ipd_clinical_diagnosis,ipd_gender,ipd_consent,DNA_material_id,ipd_collection_year,requisition_hospital,extraction_hospital,tumor_content_nr,batch_nr,str(sample_material),sample_type,str(tumor_type),str_TMB_DRUP,TMB_TSO500,MSI_TSO500,pipline)
