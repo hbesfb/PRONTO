@@ -882,7 +882,7 @@ def update_ppt_variant_summary_table(data_nrows,DNA_sampleID,RNA_sampleID,TMB_DR
 	return stable_text
 
 
-def remisse_mail_writer(remisse_file,ipd_no,ipd_consent,DNA_normal_sampleID,RNA_sampleID,extraction_hospital,ipd_material_id,TMB_DRUP,stable_text,sample_material,sample_type,sample_list,pipline):
+def remisse_mail_writer(remisse_file,ipd_no,ipd_consent,DNA_normal_sampleID,RNA_sampleID,extraction_hospital,ipd_material_id,str_TMB_DRUP,TMB_DRUP,stable_text,sample_material,sample_type,sample_list,pipline):
 	from docx import Document
 	from docx.shared import Pt
 	from docx.shared import RGBColor as docRGBColor
@@ -919,19 +919,23 @@ def remisse_mail_writer(remisse_file,ipd_no,ipd_consent,DNA_normal_sampleID,RNA_
 	text3 = pg2.add_run("diagnose")
 	text3.font.color.rgb = docRGBColor(0,176,80)
 	pg2.add_run(if_normal_sampleID)
-	if(TMB_DRUP >= 0 and TMB_DRUP <= 5):
-		TMB_position = "lav"
-	if(TMB_DRUP > 5 and TMB_DRUP <= 20):
-		TMB_position = "intermediær"
-	if(TMB_DRUP > 20):
-		TMB_position = "høy"
+	if(str_TMB_DRUP == "NA"):
+		TMB_string = "Upålitelig, ikke beregnet\n"
+	else:
+		if(TMB_DRUP >= 0 and TMB_DRUP <= 5):
+			TMB_position = "lav"
+		if(TMB_DRUP > 5 and TMB_DRUP <= 20):
+			TMB_position = "intermediær"
+		if(TMB_DRUP > 20):
+			TMB_position = "høy"
+		TMB_string = str(TMB_DRUP) + " mut/Mb; " + TMB_position + "\n"
 	if(stable_text == "Unstable"):
 		stable_text = "Ustabil"
 	if(stable_text == "Stable"):
 		stable_text = "Stabil"
 	if(stable_text == "Not reliable"):
 		stable_text = "Inkonklusiv"
-	pg2.add_run("Tumor mutasjonsbyrde (TMB) estimat og kategori: " + str(TMB_DRUP) + " mut/Mb; " + TMB_position + "\n" + "Mikrosatellitt (MS) status: " + stable_text + "\nDNA-kopitallsendringer (estimert kopitall): ")	
+	pg2.add_run("Tumor mutasjonsbyrde (TMB) estimat og kategori: " + TMB_string + "Mikrosatellitt (MS) status: " + stable_text + "\nDNA-kopitallsendringer (estimert kopitall): ")	
 	text4 = pg2.add_run("Ingen kopitall av sikker klinisk betydning\n")
 	text4.font.color.rgb = docRGBColor(0,176,80)
 	pg2.add_run("Genfusjoner: ")
@@ -1477,7 +1481,7 @@ def main(argv):
 
 				if(remisse_mail == True):
 					remisse_file = output_path + ipd_no + "_Remisse_draft.docx"
-					remisse_mail_writer(remisse_file,ipd_no,ipd_consent,DNA_normal_sampleID,RNA_sampleID,extraction_hospital,ipd_material_id,TMB_DRUP,stable_text,str(sample_material),sample_type,sample_list,pipline)
+					remisse_mail_writer(remisse_file,ipd_no,ipd_consent,DNA_normal_sampleID,RNA_sampleID,extraction_hospital,ipd_material_id,str_TMB_DRUP,TMB_DRUP,stable_text,str(sample_material),sample_type,sample_list,pipline)
 				ipd_material_file_2024 = base_dir + "/In/MTF/" + ipd_no[:3] + '-' + ipd_no[3:] + "_Material Transit Form InPreD NGS_2024.xlsx"
 				ipd_material_file_2023 = base_dir + "/In/MTF/" + ipd_no[:3] + '-' + ipd_no[3:] + "_Material Transit Form InPreD NGS.xlsx"
 				if os.path.exists(ipd_material_file_2024):
