@@ -974,10 +974,14 @@ def update_clinical_master_file(InPreD_clinical_data_file,sample_id,if_generate_
 		fr = open(InPreD_clinical_data_file, 'r', encoding=encoding_sys)
 	else:
 		fr = open(InPreD_clinical_data_file, 'r')
+	if(str(requisition_hospital) == "0.0"):
+		requisition_hospital = "-"
+	if(str(extraction_hospital) == "0.0"):
+		extraction_hospital = "-"
 	for ln in fr:
 		if(ln.split('\t')[0] == sample_id):
 			if_exist = True
-			line = sample_id + "\t" + runID + "\t" + if_generate_report + "\t" + ipd_birth_year + "\t" + ipd_diagnosis_year + "\t" + clinical_diagnosis + "\t" + ipd_gender[0] + "\t" + ipd_consent + "\t" + material_id + "\t" + ipd_collection_year + "\t" + requisition_hospital + "\t" + extraction_hospital + "\t" + str(tumor_content_nr) + "\t" +batch_nr + "\n"
+			line = sample_id + "\t" + runID + "\t" + if_generate_report + "\t" + ipd_birth_year + "\t" + ipd_diagnosis_year + "\t" + clinical_diagnosis + "\t" + ipd_gender[0] + "\t" + ipd_consent + "\t" + material_id + "\t" + ipd_collection_year + "\t" + requisition_hospital + "\t" + extraction_hospital + "\t" + str(tumor_content_nr) + "\t" + batch_nr + "\n"
 			new_line = ln.replace(ln,line)
 			new_content = new_content + new_line
 		else:
@@ -988,7 +992,7 @@ def update_clinical_master_file(InPreD_clinical_data_file,sample_id,if_generate_
 	else:
 		fa = open(InPreD_clinical_data_file, 'a')
 	if(if_exist == False):
-		line = sample_id + "\t" + runID + "\t" + if_generate_report + "\t" + ipd_birth_year + "\t" + ipd_diagnosis_year + "\t" + clinical_diagnosis + "\t" + ipd_gender[0] + "\t" + ipd_consent + "\t" + material_id + "\t" + ipd_collection_year + "\t" + requisition_hospital + "\t" + extraction_hospital + "\t" + str(tumor_content_nr) + "\t" +batch_nr + "\n"
+		line = sample_id + "\t" + runID + "\t" + if_generate_report + "\t" + ipd_birth_year + "\t" + ipd_diagnosis_year + "\t" + clinical_diagnosis + "\t" + ipd_gender[0] + "\t" + ipd_consent + "\t" + material_id + "\t" + ipd_collection_year + "\t" + requisition_hospital + "\t" + extraction_hospital + "\t" + str(tumor_content_nr) + "\t" + batch_nr + "\n"
 		if(encoding_sys != ""):
 			fa = open(InPreD_clinical_data_file, 'a', encoding=encoding_sys)
 		else:
@@ -1015,6 +1019,10 @@ def update_clinical_tsoppi_file(InPreD_clinical_tsoppi_data_file,sample_id,if_ge
 		sample_type = sample_type.replace("\n", "")
 	except:
 		sample_type = ""
+	if(str(requisition_hospital) == "0.0"):
+		requisition_hospital = "-"
+	if(str(extraction_hospital) == "0.0"):
+		extraction_hospital = "-"
 	if(pipline != "-" and pipline != ""):
 		pipline = pipline.split(": ")[1]
 	new_content = ""
